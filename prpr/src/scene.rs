@@ -458,7 +458,7 @@ impl Main {
         Judge::on_new_frame();
         let mut touches = Judge::get_touches();
         touches.iter_mut().for_each(f);
-        if !(touches.is_empty() || FULL_LOADING.with(|it| it.borrow().is_some())) {
+        if !(FULL_LOADING.with(|it| it.borrow().is_some())) {
             let now = self.tm.now();
             let delta = (now - self.last_update_time) / touches.len() as f64;
             let start_time = self.tm.start_time;

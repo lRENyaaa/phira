@@ -268,28 +268,7 @@ fn create_init_task(config: Config, token: Option<String>) -> Task<Result<InitRe
             password: &'a str,
         }
 
-        let token = if let Some(token) = token {
-            token
-        } else {
-            #[derive(Deserialize)]
-            #[serde(rename_all = "camelCase")]
-            struct LoginR {
-                token: String,
-            }
-            info!("登录中…");
-            let resp: LoginR = reqwest::Client::new()
-                .post("https://api.phira.cn/login")
-                .json(&LoginP {
-                    email: &config.email,
-                    password: &config.password,
-                })
-                .send()
-                .await?
-                .error_for_status()?
-                .json()
-                .await?;
-            resp.token
-        };
+        let token = token.unwrap_or(config.password.clone());
 
         info!("连接 & 鉴权中…");
         let client = Client::new(TcpStream::connect(&config.server).await.context("连接到服务器失败")?)
